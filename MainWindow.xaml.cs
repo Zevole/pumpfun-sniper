@@ -66,7 +66,7 @@ namespace PumpFunSniper
                 Debug.WriteLine("[DEBUG] Установка заголовка Authorization");
                 _wsClient.Options.SetRequestHeader("Authorization", $"Bearer {apiKey}");
 
-                Debug.WriteLine("[DEBUG] Попытка подключения к: {wsUrl}");
+                Debug.WriteLine($"[DEBUG] Попытка подключения к: {wsUrl}");
                 await _wsClient.ConnectAsync(new Uri(wsUrl), _cts.Token);
                 Debug.WriteLine("[DEBUG] Подключение установлено");
 
@@ -76,18 +76,18 @@ namespace PumpFunSniper
                     jsonrpc = "2.0",
                     id = 1,
                     method = "logsSubscribe",
-                    @params = new[]
+                    @params = new object[]
                     {
                         new
                         {
-                            mentions = new[] { "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P" },
-                            commitment = "finalized"
-                        }
+                            mentions = new[] { "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P" }
+                        },
+                        "finalized"
                     }
                 };
 
                 var json = JsonSerializer.Serialize(subscription);
-                Debug.WriteLine("[DEBUG] Отправка запроса подписки: {json}");
+                Debug.WriteLine($"[DEBUG] Отправка запроса подписки: {json}");
                 var buffer = Encoding.UTF8.GetBytes(json);
                 await _wsClient.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, _cts.Token);
                 Debug.WriteLine("[DEBUG] Запрос подписки отправлен");
@@ -198,6 +198,13 @@ namespace PumpFunSniper
         public string? Jsonrpc { get; set; }
         public int Id { get; set; }
         public Result? Result { get; set; }
+        public Error? Error { get; set; }
+    }
+
+    public class Error
+    {
+        public int Code { get; set; }
+        public string? Message { get; set; }
     }
 
     public class Result
