@@ -3,3 +3,15 @@
 ################################################################################
 
 /.vs/PumpFunSniper/FileContentIndex/2b3dc44a-0528-481d-b36a-33317ed7ce3b.vsidx
+# Игнорировать файлы Visual Studio
+.vs/
+bin/
+obj/
+*.suo
+*.user
+*.sln.docstates
+.env
+
+# Игнорировать временные файлы
+*.log
+*.bak
