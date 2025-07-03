@@ -33,27 +33,33 @@ namespace PumpFunSniper
         {
             InitializeComponent();
             DataContext = this;
-            Loaded += async (s, e) => await StartMonitoring();
+            Console.WriteLine("[DEBUG] Конструктор инициализирован");
+            Loaded += async (s, e) =>
+            {
+                Console.WriteLine("[DEBUG] Событие Loaded вызвано");
+                await StartMonitoring();
+            };
         }
 
         private async Task StartMonitoring()
         {
+            Console.WriteLine("[DEBUG] Начало StartMonitoring");
             Status = "Статус: Инициализация подключения...";
-            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(180)); // Увеличен таймаут до 180 секунд
+            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // Увеличен таймаут до 300 секунд
             _wsClient = new ClientWebSocket();
             string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш актуальный Helius URL
             string apiKey = "8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш API-ключ от Helius
 
             try
             {
-                // Добавление заголовка с API-клюем для Helius
+                Console.WriteLine("[DEBUG] Установка заголовка Authorization");
                 _wsClient.Options.SetRequestHeader("Authorization", $"Bearer {apiKey}");
 
-                Console.WriteLine("[DEBUG] Инициализация подключения к: {wsUrl}");
+                Console.WriteLine("[DEBUG] Попытка подключения к: {wsUrl}");
                 await _wsClient.ConnectAsync(new Uri(wsUrl), _cts.Token);
-                Status = "Статус: Подключение установлено";
                 Console.WriteLine("[DEBUG] Подключение установлено");
 
+                Status = "Статус: Подключение установлено";
                 var subscription = new
                 {
                     jsonrpc = "2.0",
@@ -79,8 +85,8 @@ namespace PumpFunSniper
             }
             catch (Exception ex)
             {
-                Status = $"Статус: Ошибка - {ex.Message}";
                 Console.WriteLine("[ERROR] Ошибка: {ex.Message}");
+                Status = $"Статус: Ошибка - {ex.Message}";
                 MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -153,6 +159,7 @@ namespace PumpFunSniper
         {
             _cts?.Cancel();
             _wsClient?.CloseAsync(WebSocketCloseStatus.NormalClosure, "Закрытие окна", CancellationToken.None);
+            Console.WriteLine("[DEBUG] Окно закрыто");
             base.OnClosed(e);
         }
     }
