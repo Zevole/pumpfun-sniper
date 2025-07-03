@@ -10,30 +10,45 @@ using System.Windows;
 
 namespace PumpFunSniper
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private readonly ObservableCollection<TokenInfo> _tokens = new();
-        private ClientWebSocket? _wsClient; // Nullable
-        private CancellationTokenSource? _cts; // Nullable
+        private ClientWebSocket? _wsClient;
+        private CancellationTokenSource? _cts;
+        private string _status = "Статус: Ожидание подключения...";
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public ObservableCollection<TokenInfo> Tokens => _tokens;
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+            }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
-            TokenGrid.ItemsSource = _tokens;
-            Loaded += async (s, e) => await StartMonitoring(); // Запуск при загрузке окна
+            DataContext = this;
+            Loaded += async (s, e) => await StartMonitoring();
         }
 
         private async Task StartMonitoring()
         {
-            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // Таймаут 30 секунд
+            Status = "Статус: Инициализация подключения...";
+            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(120)); // Таймаут 120 секунд
             _wsClient = new ClientWebSocket();
-            string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502";
+            string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш актуальный QuickNode URL
 
             try
             {
-                Console.WriteLine("Попытка подключения к: " + wsUrl);
+                Console.WriteLine("[DEBUG] Инициализация подключения к: {wsUrl}");
                 await _wsClient.ConnectAsync(new Uri(wsUrl), _cts.Token);
-                Console.WriteLine("Подключение установлено");
+                Status = "Статус: Подключение установлено";
+                Console.WriteLine("[DEBUG] Подключение установлено");
 
                 var subscription = new
                 {
@@ -51,16 +66,17 @@ namespace PumpFunSniper
                 };
 
                 var json = JsonSerializer.Serialize(subscription);
-                Console.WriteLine("Отправка запроса подписки: " + json);
+                Console.WriteLine("[DEBUG] Отправка запроса подписки: {json}");
                 var buffer = Encoding.UTF8.GetBytes(json);
                 await _wsClient.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, _cts.Token);
-                Console.WriteLine("Запрос подписки отправлен");
+                Console.WriteLine("[DEBUG] Запрос подписки отправлен");
 
                 await ReceiveMessages();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка: {ex.Message}");
+                Status = $"Статус: Ошибка - {ex.Message}";
+                Console.WriteLine("[ERROR] Ошибка: {ex.Message}");
                 MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -75,7 +91,7 @@ namespace PumpFunSniper
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Console.WriteLine($"Получено: {message}");
+                    Console.WriteLine("[DEBUG] Получено: {message}");
 
                     try
                     {
@@ -105,7 +121,7 @@ namespace PumpFunSniper
                     }
                     catch (JsonException ex)
                     {
-                        Console.WriteLine($"Ошибка парсинга JSON: {ex.Message}");
+                        Console.WriteLine("[ERROR] Ошибка парсинга JSON: {ex.Message}");
                     }
                 }
             }
@@ -121,7 +137,7 @@ namespace PumpFunSniper
                     if (parts.Length > 1)
                     {
                         var addressPart = parts[1].Trim().Split(' ')[0];
-                        if (addressPart.Length == 44) // Длина Solana адреса
+                        if (addressPart.Length == 44)
                             return addressPart;
                     }
                 }
@@ -139,26 +155,26 @@ namespace PumpFunSniper
 
     public class JsonResponse
     {
-        public string? Jsonrpc { get; set; } // Nullable
+        public string? Jsonrpc { get; set; }
         public int Id { get; set; }
-        public Result? Result { get; set; } // Nullable
+        public Result? Result { get; set; }
     }
 
     public class Result
     {
-        public Value? Value { get; set; } // Nullable
+        public Value? Value { get; set; }
     }
 
     public class Value
     {
-        public string[]? Logs { get; set; } // Nullable
-        public string? Signature { get; set; } // Nullable
+        public string[]? Logs { get; set; }
+        public string? Signature { get; set; }
     }
 
     public class TokenInfo : INotifyPropertyChanged
     {
-        private string? _tokenAddress; // Nullable
-        private string? _developer; // Nullable
+        private string? _tokenAddress;
+        private string? _developer;
         private double _marketCap;
 
         public string? TokenAddress
@@ -179,7 +195,7 @@ namespace PumpFunSniper
             set { _marketCap = value; OnPropertyChanged(nameof(MarketCap)); }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged; // Nullable
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

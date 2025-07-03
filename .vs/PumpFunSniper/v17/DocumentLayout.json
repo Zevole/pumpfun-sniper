@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
@@ -26,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 327,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
@@ -55,25 +55,25 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml*",
-              "RelativeToolTip": "MainWindow.xaml*",
+              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-07-03T20:44:06.475Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml.cs*",
-              "RelativeToolTip": "MainWindow.xaml.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAADAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAA5wCsAAABmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-03T20:44:06.099Z",
               "EditorCaption": ""
