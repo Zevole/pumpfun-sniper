@@ -39,12 +39,16 @@ namespace PumpFunSniper
         private async Task StartMonitoring()
         {
             Status = "Статус: Инициализация подключения...";
-            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(120)); // Таймаут 120 секунд
+            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(180)); // Увеличен таймаут до 180 секунд
             _wsClient = new ClientWebSocket();
-            string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш актуальный QuickNode URL
+            string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш актуальный Helius URL
+            string apiKey = "8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш API-ключ от Helius
 
             try
             {
+                // Добавление заголовка с API-клюем для Helius
+                _wsClient.Options.SetRequestHeader("Authorization", $"Bearer {apiKey}");
+
                 Console.WriteLine("[DEBUG] Инициализация подключения к: {wsUrl}");
                 await _wsClient.ConnectAsync(new Uri(wsUrl), _cts.Token);
                 Status = "Статус: Подключение установлено";
