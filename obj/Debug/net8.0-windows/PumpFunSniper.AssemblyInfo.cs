@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PumpFunSniper")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e79b3445f19f14ffe246cf2112fb1519c61013ab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf334f5c14124d0f9d0d2ae0dee75da2d60fc1ca")]
 [assembly: System.Reflection.AssemblyProductAttribute("PumpFunSniper")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PumpFunSniper")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

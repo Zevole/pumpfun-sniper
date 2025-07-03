@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,12 +20,10 @@ namespace PumpFunSniper
         {
             InitializeComponent();
             TokenGrid.ItemsSource = _tokens;
-
-            // Запуск мониторинга
-            StartMonitoring();
+            Loaded += async (s, e) => await StartMonitoring(); // Запуск при загрузке окна
         }
 
-        private async void StartMonitoring()
+        private async Task StartMonitoring()
         {
             _cts = new CancellationTokenSource();
             _wsClient = new ClientWebSocket();
@@ -32,10 +31,10 @@ namespace PumpFunSniper
 
             try
             {
+                Console.WriteLine("Попытка подключения к: " + wsUrl);
                 await _wsClient.ConnectAsync(new Uri(wsUrl), _cts.Token);
                 Console.WriteLine("Подключение установлено");
 
-                // Отправка запроса на подписку
                 var subscription = new
                 {
                     jsonrpc = "2.0",
@@ -51,22 +50,24 @@ namespace PumpFunSniper
                     }
                 };
 
-                var json = System.Text.Json.JsonSerializer.Serialize(subscription);
+                var json = JsonSerializer.Serialize(subscription);
+                Console.WriteLine("Отправка запроса подписки: " + json);
                 var buffer = Encoding.UTF8.GetBytes(json);
                 await _wsClient.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, _cts.Token);
+                Console.WriteLine("Запрос подписки отправлен");
 
-                // Чтение ответов
                 await ReceiveMessages();
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Ошибка: {ex.Message}");
                 MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async Task ReceiveMessages()
         {
-            var buffer = new byte[1024];
+            var buffer = new byte[1024 * 4];
             while (_wsClient.State == WebSocketState.Open)
             {
                 var result = await _wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), _cts.Token);
@@ -75,22 +76,56 @@ namespace PumpFunSniper
                     var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                     Console.WriteLine($"Получено: {message}");
 
-                    // Простая проверка на создание токена (нужна доработка парсинга)
-                    if (message.Contains("Instruction: Create") || message.ToLower().Contains("create"))
+                    try
                     {
-                        Dispatcher.Invoke(() =>
+                        var data = JsonSerializer.Deserialize<JsonResponse>(message);
+                        if (data?.Result?.Value?.Logs != null)
                         {
-                            _tokens.Add(new TokenInfo
+                            var logs = data.Result.Value.Logs;
+                            Console.WriteLine("Логи: " + string.Join(", ", logs));
+                            if (logs.Any(l => l.Contains("Instruction: Create") || l.ToLower().Contains("create")))
                             {
-                                TokenAddress = "Неизвестно",
-                                Developer = "Неизвестно",
-                                MarketCap = 0
-                            });
-                        });
-                        Console.WriteLine("Новый токен обнаружен");
+                                string tokenAddress = ExtractTokenAddress(logs) ?? "Неизвестно";
+                                string developer = "Неизвестно";
+                                double marketCap = 0;
+
+                                Dispatcher.Invoke(() =>
+                                {
+                                    _tokens.Add(new TokenInfo
+                                    {
+                                        TokenAddress = tokenAddress,
+                                        Developer = developer,
+                                        MarketCap = marketCap
+                                    });
+                                });
+                                Console.WriteLine($"Новый токен обнаружен: Адрес - {tokenAddress}");
+                            }
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                        Console.WriteLine($"Ошибка парсинга JSON: {ex.Message}");
                     }
                 }
             }
+        }
+
+        private string ExtractTokenAddress(string[] logs)
+        {
+            foreach (var log in logs)
+            {
+                if (log.Contains("create") && log.Contains("TokenMint"))
+                {
+                    var parts = log.Split(new[] { "TokenMint" }, StringSplitOptions.None);
+                    if (parts.Length > 1)
+                    {
+                        var addressPart = parts[1].Trim().Split(' ')[0];
+                        if (addressPart.Length == 44) // Длина Solana адреса
+                            return addressPart;
+                    }
+                }
+            }
+            return null;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -99,6 +134,24 @@ namespace PumpFunSniper
             _wsClient?.CloseAsync(WebSocketCloseStatus.NormalClosure, "Закрытие окна", CancellationToken.None);
             base.OnClosed(e);
         }
+    }
+
+    public class JsonResponse
+    {
+        public string Jsonrpc { get; set; }
+        public int Id { get; set; }
+        public Result Result { get; set; }
+    }
+
+    public class Result
+    {
+        public Value Value { get; set; }
+    }
+
+    public class Value
+    {
+        public string[] Logs { get; set; }
+        public string Signature { get; set; }
     }
 
     public class TokenInfo : INotifyPropertyChanged
