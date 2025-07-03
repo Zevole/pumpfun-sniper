@@ -1,0 +1,14 @@
+﻿<Window x:Class="PumpFunSniper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pump.fun Sniper" Height="600" Width="800">
+    <Grid>
+        <DataGrid x:Name="TokenGrid" AutoGenerateColumns="False" Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Адрес токена" Binding="{Binding TokenAddress}" />
+                <DataGridTextColumn Header="Разработчик" Binding="{Binding Developer}" />
+                <DataGridTextColumn Header="Капитализация" Binding="{Binding MarketCap}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
