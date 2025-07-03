@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\pumpfunsniper.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:pumpfunsniper.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\.gitignore.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:.gitignore.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|c:\\users\\4070\\source\\repos\\pumpfunsniper\\pumpfunsniper.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{7062C881-0231-4D8B-9B19-C07E250CC833}|PumpFunSniper.csproj|solutionrelative:pumpfunsniper.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,37 +30,37 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\.gitignore",
-              "RelativeDocumentMoniker": ".gitignore",
-              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\.gitignore",
-              "RelativeToolTip": ".gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAFAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPjVNLTgJBEG1lwpoFB3GNK9fieA48hD8iwT/ihwgSDAIHgAGXXsEV18CNzL/LquqZdsYM6kteXqcy3fWqpmpNRBgOhyABBEgpAFVKPIMUcYzUyOU\u002BXM/b2qtU3vkSfRjjZTCAMAw1A2LwzdFoBPP5HNqdzuL27n4juibWI\u002BUshBA1DIkhEx9iEorFotgslQqGYbxxAGFEqt1MxmPWJLbLZdZ\u002Bv89q5PMFPiTR6z2zdaxR0fXA0XTBcVywkb4fwHXjRteecIDNQ7UmExVYAdPcxYaqclN46na5WenMKjtlVnTYwcXlVYaDqImW9beD5N/TeGy32QHXm6hZ03ZgiSQHp2fnWQ4oBmJqWSqwAqZpZjt4aLXAD4J0VqyZsmoubfB8H2r1eoaD6NXZ9HcHO\u002BSA3f4AjifXl8rItOETM8ckB9WTWpYD9RdeZ1PWVWAHWXPQaDb59f/w8LiqHeh1pvGkCaP6qB8yXusoxmuNZ7XmII4O9vGuEF86osuDYRkpYQAAAABJRU5ErkJggg==",
-              "WhenOpened": "2025-07-03T21:43:01.803Z",
+              "DocumentIndex": 1,
+              "Title": "PumpFunSniper",
+              "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\PumpFunSniper.csproj",
+              "RelativeDocumentMoniker": "PumpFunSniper.csproj",
+              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\PumpFunSniper.csproj",
+              "RelativeToolTip": "PumpFunSniper.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-07-03T22:23:34.709Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": ".gitignore.txt",
-              "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\.gitignore.txt",
-              "RelativeDocumentMoniker": ".gitignore.txt",
-              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\.gitignore.txt",
-              "RelativeToolTip": ".gitignore.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-07-03T21:14:33.192Z"
+              "Title": "PumpFunSniper",
+              "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\PumpFunSniper.csproj",
+              "RelativeDocumentMoniker": "PumpFunSniper.csproj",
+              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\PumpFunSniper.csproj*",
+              "RelativeToolTip": "PumpFunSniper.csproj*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-07-03T21:44:07.923Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml*",
-              "RelativeToolTip": "MainWindow.xaml*",
+              "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-07-03T20:44:06.475Z",
               "EditorCaption": ""
@@ -73,7 +73,7 @@
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\4070\\source\\repos\\PumpFunSniper\\MainWindow.xaml.cs*",
               "RelativeToolTip": "MainWindow.xaml.cs*",
-              "ViewState": "AgIAAIQAAAAAAAAAAAAmwKcAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAowDUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-03T20:44:06.099Z",
               "EditorCaption": ""

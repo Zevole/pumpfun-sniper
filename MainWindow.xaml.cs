@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -33,31 +34,41 @@ namespace PumpFunSniper
         {
             InitializeComponent();
             DataContext = this;
-            Console.WriteLine("[DEBUG] Конструктор инициализирован");
-            Loaded += async (s, e) =>
+            Debug.WriteLine("[DEBUG] Конструктор инициализирован");
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("[DEBUG] Событие Loaded вызвано");
+            await StartMonitoring();
+            // Асинхронное ожидание, чтобы окно не закрывалось
+            try
             {
-                Console.WriteLine("[DEBUG] Событие Loaded вызвано");
-                await StartMonitoring();
-            };
+                await Task.Delay(Timeout.Infinite, _cts.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                Debug.WriteLine("[DEBUG] Ожидание отменено");
+            }
         }
 
         private async Task StartMonitoring()
         {
-            Console.WriteLine("[DEBUG] Начало StartMonitoring");
+            Debug.WriteLine("[DEBUG] Начало StartMonitoring");
             Status = "Статус: Инициализация подключения...";
-            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // Увеличен таймаут до 300 секунд
+            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // Таймаут 300 секунд
             _wsClient = new ClientWebSocket();
             string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш актуальный Helius URL
             string apiKey = "8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш API-ключ от Helius
 
             try
             {
-                Console.WriteLine("[DEBUG] Установка заголовка Authorization");
+                Debug.WriteLine("[DEBUG] Установка заголовка Authorization");
                 _wsClient.Options.SetRequestHeader("Authorization", $"Bearer {apiKey}");
 
-                Console.WriteLine("[DEBUG] Попытка подключения к: {wsUrl}");
+                Debug.WriteLine("[DEBUG] Попытка подключения к: {wsUrl}");
                 await _wsClient.ConnectAsync(new Uri(wsUrl), _cts.Token);
-                Console.WriteLine("[DEBUG] Подключение установлено");
+                Debug.WriteLine("[DEBUG] Подключение установлено");
 
                 Status = "Статус: Подключение установлено";
                 var subscription = new
@@ -76,16 +87,16 @@ namespace PumpFunSniper
                 };
 
                 var json = JsonSerializer.Serialize(subscription);
-                Console.WriteLine("[DEBUG] Отправка запроса подписки: {json}");
+                Debug.WriteLine("[DEBUG] Отправка запроса подписки: {json}");
                 var buffer = Encoding.UTF8.GetBytes(json);
                 await _wsClient.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, _cts.Token);
-                Console.WriteLine("[DEBUG] Запрос подписки отправлен");
+                Debug.WriteLine("[DEBUG] Запрос подписки отправлен");
 
                 await ReceiveMessages();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("[ERROR] Ошибка: {ex.Message}");
+                Debug.WriteLine($"[ERROR] Ошибка: {ex.Message}");
                 Status = $"Статус: Ошибка - {ex.Message}";
                 MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -97,42 +108,60 @@ namespace PumpFunSniper
             var buffer = new byte[1024 * 4];
             while (_wsClient.State == WebSocketState.Open)
             {
-                var result = await _wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), _cts?.Token ?? CancellationToken.None);
-                if (result.MessageType == WebSocketMessageType.Text)
+                try
                 {
-                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Console.WriteLine("[DEBUG] Получено: {message}");
-
-                    try
+                    var result = await _wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), _cts?.Token ?? CancellationToken.None);
+                    if (result.MessageType == WebSocketMessageType.Text)
                     {
-                        var data = JsonSerializer.Deserialize<JsonResponse>(message);
-                        if (data?.Result?.Value?.Logs != null)
-                        {
-                            var logs = data.Result.Value.Logs;
-                            Console.WriteLine("Логи: " + string.Join(", ", logs));
-                            if (logs.Any(l => l.Contains("Instruction: Create") || l.ToLower().Contains("create")))
-                            {
-                                string tokenAddress = ExtractTokenAddress(logs) ?? "Неизвестно";
-                                string developer = "Неизвестно";
-                                double marketCap = 0;
+                        var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                        Debug.WriteLine($"[DEBUG] Получено: {message}");
 
-                                Dispatcher.Invoke(() =>
+                        try
+                        {
+                            var data = JsonSerializer.Deserialize<JsonResponse>(message);
+                            if (data?.Result?.Value?.Logs != null)
+                            {
+                                var logs = data.Result.Value.Logs;
+                                Debug.WriteLine("Логи: " + string.Join(", ", logs));
+                                if (logs.Any(l => l.Contains("Instruction: Create") || l.ToLower().Contains("create")))
                                 {
-                                    _tokens.Add(new TokenInfo
+                                    string tokenAddress = ExtractTokenAddress(logs) ?? "Неизвестно";
+                                    string developer = "Неизвестно";
+                                    double marketCap = 0;
+
+                                    Dispatcher.Invoke(() =>
                                     {
-                                        TokenAddress = tokenAddress,
-                                        Developer = developer,
-                                        MarketCap = marketCap
+                                        _tokens.Add(new TokenInfo
+                                        {
+                                            TokenAddress = tokenAddress,
+                                            Developer = developer,
+                                            MarketCap = marketCap
+                                        });
                                     });
-                                });
-                                Console.WriteLine($"Новый токен обнаружен: Адрес - {tokenAddress}");
+                                    Debug.WriteLine($"Новый токен обнаружен: Адрес - {tokenAddress}");
+                                }
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"[DEBUG] Ответ не содержит Logs: {message}");
                             }
                         }
+                        catch (JsonException ex)
+                        {
+                            Debug.WriteLine($"[ERROR] Ошибка парсинга JSON: {ex.Message}, Сообщение: {message}");
+                        }
                     }
-                    catch (JsonException ex)
+                    else if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        Console.WriteLine("[ERROR] Ошибка парсинга JSON: {ex.Message}");
+                        Debug.WriteLine("[DEBUG] WebSocket закрыт сервером");
+                        Status = "Статус: WebSocket закрыт";
+                        break;
                     }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[ERROR] Ошибка в ReceiveMessages: {ex.Message}");
+                    break;
                 }
             }
         }
@@ -159,7 +188,7 @@ namespace PumpFunSniper
         {
             _cts?.Cancel();
             _wsClient?.CloseAsync(WebSocketCloseStatus.NormalClosure, "Закрытие окна", CancellationToken.None);
-            Console.WriteLine("[DEBUG] Окно закрыто");
+            Debug.WriteLine("[DEBUG] Окно закрыто");
             base.OnClosed(e);
         }
     }
