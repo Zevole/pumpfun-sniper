@@ -5,9 +5,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="StatusText" Text="Статус: Ожидание подключения..." Margin="10" FontWeight="Bold"/>
-        <DataGrid x:Name="TokenGrid" Grid.Row="1" AutoGenerateColumns="True" Margin="10" ItemsSource="{Binding Tokens}"/>
+        <TextBlock x:Name="StatusText" Text="Статус: Ожидание подключения..." Margin="10" FontWeight="Bold" Grid.Row="0"/>
+        <ProgressBar x:Name="ProgressBar" IsIndeterminate="True" Height="20" Margin="10" Grid.Row="1" Visibility="Hidden"/>
+        <DataGrid x:Name="TokenGrid" Grid.Row="2" AutoGenerateColumns="True" Margin="10" ItemsSource="{Binding Tokens}"/>
     </Grid>
 </Window>

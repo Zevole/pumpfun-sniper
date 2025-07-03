@@ -27,6 +27,7 @@ namespace PumpFunSniper
             {
                 _status = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+                Dispatcher.Invoke(() => StatusText.Text = value);
             }
         }
 
@@ -56,10 +57,11 @@ namespace PumpFunSniper
         {
             Debug.WriteLine("[DEBUG] Начало StartMonitoring");
             Status = "Статус: Инициализация подключения...";
+            Dispatcher.Invoke(() => ProgressBar.Visibility = Visibility.Visible);
             _cts = new CancellationTokenSource(TimeSpan.FromSeconds(300)); // Таймаут 300 секунд
             _wsClient = new ClientWebSocket();
-            string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш актуальный Helius URL
-            string apiKey = "8051d855-723f-4a71-92ed-23d7e7136502"; // Замените на ваш API-ключ от Helius
+            string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502"; // Ваш URL
+            string apiKey = "8051d855-723f-4a71-92ed-23d7e7136502"; // Ваш API-ключ
 
             try
             {
@@ -82,7 +84,10 @@ namespace PumpFunSniper
                         {
                             mentions = new[] { "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P" }
                         },
-                        "finalized"
+                        new
+                        {
+                            commitment = "finalized"
+                        }
                     }
                 };
 
@@ -98,6 +103,7 @@ namespace PumpFunSniper
             {
                 Debug.WriteLine($"[ERROR] Ошибка: {ex.Message}");
                 Status = $"Статус: Ошибка - {ex.Message}";
+                Dispatcher.Invoke(() => ProgressBar.Visibility = Visibility.Hidden);
                 MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -119,6 +125,13 @@ namespace PumpFunSniper
                         try
                         {
                             var data = JsonSerializer.Deserialize<JsonResponse>(message);
+                            if (data?.Error != null)
+                            {
+                                Debug.WriteLine($"[ERROR] Ошибка от сервера: Code={data.Error.Code}, Message={data.Error.Message}");
+                                Status = $"Статус: Ошибка сервера - {data.Error.Message}";
+                                continue;
+                            }
+
                             if (data?.Result?.Value?.Logs != null)
                             {
                                 var logs = data.Result.Value.Logs;
@@ -139,6 +152,7 @@ namespace PumpFunSniper
                                         });
                                     });
                                     Debug.WriteLine($"Новый токен обнаружен: Адрес - {tokenAddress}");
+                                    Status = $"Статус: Обнаружен новый токен ({tokenAddress})";
                                 }
                             }
                             else
@@ -155,12 +169,15 @@ namespace PumpFunSniper
                     {
                         Debug.WriteLine("[DEBUG] WebSocket закрыт сервером");
                         Status = "Статус: WebSocket закрыт";
+                        Dispatcher.Invoke(() => ProgressBar.Visibility = Visibility.Hidden);
                         break;
                     }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[ERROR] Ошибка в ReceiveMessages: {ex.Message}");
+                    Status = $"Статус: Ошибка - {ex.Message}";
+                    Dispatcher.Invoke(() => ProgressBar.Visibility = Visibility.Hidden);
                     break;
                 }
             }
@@ -189,6 +206,7 @@ namespace PumpFunSniper
             _cts?.Cancel();
             _wsClient?.CloseAsync(WebSocketCloseStatus.NormalClosure, "Закрытие окна", CancellationToken.None);
             Debug.WriteLine("[DEBUG] Окно закрыто");
+            Dispatcher.Invoke(() => ProgressBar.Visibility = Visibility.Hidden);
             base.OnClosed(e);
         }
     }
