@@ -1,0 +1,11 @@
+# Игнорировать файлы Visual Studio
+.vs/
+bin/
+obj/
+*.suo
+*.user
+*.sln.docstates
+
+# Игнорировать временные файлы
+*.log
+*.bak
