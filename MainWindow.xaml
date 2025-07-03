@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Pump.fun Sniper" Height="600" Width="800">
     <Grid>
-        <DataGrid x:Name="TokenGrid" AutoGenerateColumns="False" Margin="10">
+        <DataGrid x:Name="TokenGrid" AutoGenerateColumns="True" Margin="10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Адрес токена" Binding="{Binding TokenAddress}" />
                 <DataGridTextColumn Header="Разработчик" Binding="{Binding Developer}" />

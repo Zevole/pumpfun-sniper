@@ -13,8 +13,8 @@ namespace PumpFunSniper
     public partial class MainWindow : Window
     {
         private readonly ObservableCollection<TokenInfo> _tokens = new();
-        private ClientWebSocket _wsClient;
-        private CancellationTokenSource _cts;
+        private ClientWebSocket? _wsClient; // Nullable
+        private CancellationTokenSource? _cts; // Nullable
 
         public MainWindow()
         {
@@ -25,7 +25,7 @@ namespace PumpFunSniper
 
         private async Task StartMonitoring()
         {
-            _cts = new CancellationTokenSource();
+            _cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // Таймаут 30 секунд
             _wsClient = new ClientWebSocket();
             string wsUrl = "wss://mainnet.helius-rpc.com/?api-key=8051d855-723f-4a71-92ed-23d7e7136502";
 
@@ -67,10 +67,11 @@ namespace PumpFunSniper
 
         private async Task ReceiveMessages()
         {
+            if (_wsClient == null) return;
             var buffer = new byte[1024 * 4];
             while (_wsClient.State == WebSocketState.Open)
             {
-                var result = await _wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), _cts.Token);
+                var result = await _wsClient.ReceiveAsync(new ArraySegment<byte>(buffer), _cts?.Token ?? CancellationToken.None);
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
@@ -138,35 +139,35 @@ namespace PumpFunSniper
 
     public class JsonResponse
     {
-        public string Jsonrpc { get; set; }
+        public string? Jsonrpc { get; set; } // Nullable
         public int Id { get; set; }
-        public Result Result { get; set; }
+        public Result? Result { get; set; } // Nullable
     }
 
     public class Result
     {
-        public Value Value { get; set; }
+        public Value? Value { get; set; } // Nullable
     }
 
     public class Value
     {
-        public string[] Logs { get; set; }
-        public string Signature { get; set; }
+        public string[]? Logs { get; set; } // Nullable
+        public string? Signature { get; set; } // Nullable
     }
 
     public class TokenInfo : INotifyPropertyChanged
     {
-        private string _tokenAddress;
-        private string _developer;
+        private string? _tokenAddress; // Nullable
+        private string? _developer; // Nullable
         private double _marketCap;
 
-        public string TokenAddress
+        public string? TokenAddress
         {
             get => _tokenAddress;
             set { _tokenAddress = value; OnPropertyChanged(nameof(TokenAddress)); }
         }
 
-        public string Developer
+        public string? Developer
         {
             get => _developer;
             set { _developer = value; OnPropertyChanged(nameof(Developer)); }
@@ -178,7 +179,7 @@ namespace PumpFunSniper
             set { _marketCap = value; OnPropertyChanged(nameof(MarketCap)); }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged; // Nullable
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

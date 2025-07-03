@@ -35,3 +35,4 @@ C:\Users\4070\source\repos\PumpFunSniper\obj\Debug\net8.0-windows\refint\PumpFun
 C:\Users\4070\source\repos\PumpFunSniper\obj\Debug\net8.0-windows\PumpFunSniper.pdb
 C:\Users\4070\source\repos\PumpFunSniper\obj\Debug\net8.0-windows\PumpFunSniper.genruntimeconfig.cache
 C:\Users\4070\source\repos\PumpFunSniper\obj\Debug\net8.0-windows\ref\PumpFunSniper.dll
+C:\Users\4070\source\repos\PumpFunSniper\obj\Debug\net8.0-windows\PumpFunSniper.sourcelink.json
